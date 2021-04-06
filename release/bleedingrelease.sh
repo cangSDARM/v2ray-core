@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-RELBODY="https://www.v2ray.com/chapter_00/01_versions.html"
+RELBODY="https://github.com/v2fly/v2ray-core/commit/${RELEASE_SHA}"
 JSON_DATA=$(echo "{}" | jq -c ".tag_name=\"${RELEASE_TAG}\"")
 JSON_DATA=$(echo ${JSON_DATA} | jq -c ".prerelease=${PRERELEASE}")
 JSON_DATA=$(echo ${JSON_DATA} | jq -c ".body=\"${RELBODY}\"")
@@ -28,26 +28,29 @@ function upload() {
   uploadfile $DGST
 }
 
-ART_ROOT=$GOPATH/src/v2ray.com/core/bazel-bin/release
+ART_ROOT=${WORKDIR}/bazel-bin/release
 
 pushd ${ART_ROOT}
 {
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen version ${RELEASE_TAG}
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen project "v2flyunstable"
-  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-macos.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-macos-64.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-windows-64.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-windows-32.zip
-  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-windows-arm.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-windows-arm32-v7a.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-64.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-32.zip
-  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-arm.zip
-  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-arm64.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-arm64-v8a.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-arm32-v7a.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-arm32-v6.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-arm32-v5.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-mips64.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-mips64le.zip
-  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-mips.zip
-  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-mipsle.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-mips32.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-mips32le.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-ppc64.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-ppc64le.zip
+  go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-riscv64.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-linux-s390x.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-freebsd-64.zip
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil gen file v2ray-freebsd-32.zip
@@ -65,20 +68,23 @@ pushd ${ART_ROOT}
   go run github.com/xiaokangwang/V2BuildAssist/v2buildutil post commit "${RELEASE_SHA}" < buildcomment
 popd
 
-upload ${ART_ROOT}/v2ray-macos.zip
+upload ${ART_ROOT}/v2ray-macos-64.zip
 upload ${ART_ROOT}/v2ray-windows-64.zip
 upload ${ART_ROOT}/v2ray-windows-32.zip
-upload ${ART_ROOT}/v2ray-windows-arm.zip
+upload ${ART_ROOT}/v2ray-windows-arm32-v7a.zip
 upload ${ART_ROOT}/v2ray-linux-64.zip
 upload ${ART_ROOT}/v2ray-linux-32.zip
-upload ${ART_ROOT}/v2ray-linux-arm.zip
-upload ${ART_ROOT}/v2ray-linux-arm64.zip
+upload ${ART_ROOT}/v2ray-linux-arm64-v8a.zip
+upload ${ART_ROOT}/v2ray-linux-arm32-v7a.zip
+upload ${ART_ROOT}/v2ray-linux-arm32-v6.zip
+upload ${ART_ROOT}/v2ray-linux-arm32-v5.zip
 upload ${ART_ROOT}/v2ray-linux-mips64.zip
 upload ${ART_ROOT}/v2ray-linux-mips64le.zip
-upload ${ART_ROOT}/v2ray-linux-mips.zip
-upload ${ART_ROOT}/v2ray-linux-mipsle.zip
+upload ${ART_ROOT}/v2ray-linux-mips32.zip
+upload ${ART_ROOT}/v2ray-linux-mips32le.zip
 upload ${ART_ROOT}/v2ray-linux-ppc64.zip
 upload ${ART_ROOT}/v2ray-linux-ppc64le.zip
+upload ${ART_ROOT}/v2ray-linux-riscv64.zip
 upload ${ART_ROOT}/v2ray-linux-s390x.zip
 upload ${ART_ROOT}/v2ray-freebsd-64.zip
 upload ${ART_ROOT}/v2ray-freebsd-32.zip
